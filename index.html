@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🖤贡nu引导训练🖤</title>
+<style>
+  :root {
+    --bg: #12081c;
+    --card: #1c0f2e;
+    --card-border: rgba(236, 72, 153, 0.35);
+    --text: #fce7f3;
+    --muted: #c4b5c9;
+    --accent: #f472b6;
+    --accent2: #e879f9;
+    --goddess: #fbcfe8;
+    --choice: #2a1538;
+    --choice-hover: #3b1f4d;
+    --glow: 0 0 28px rgba(236, 72, 153, 0.3);
+    --warn: #fda4af;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 15% 10%, rgba(236, 72, 153, 0.16) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 90%, rgba(168, 85, 247, 0.12) 0%, transparent 50%);
+    color: var(--text);
+    line-height: 1.55;
+    padding: 6px 8px 8px;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .scene {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px 12px 8px;
+    box-shadow: var(--glow);
+    animation: fade 0.28s ease;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+  }
+  .scene.active {
+    display: flex;
+  }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+  .scene-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .narr {
+    color: var(--goddess);
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+    text-align: left;
+    word-break: break-word;
+  }
+  .task {
+    background: rgba(236, 72, 153, 0.12);
+    border: 1px solid rgba(236, 72, 153, 0.35);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 6px 0;
+    font-size: 0.88rem;
+    color: var(--warn);
+    line-height: 1.55;
+    white-space: pre-wrap;
+    flex-shrink: 0;
+    text-align: left;
+    word-break: break-word;
+  }
+  .quote {
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+    color: var(--accent2);
+    margin: 6px 0;
+    font-style: italic;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 12px;
+    margin-bottom: 5px;
+    background: var(--choice);
+    border: 1px solid rgba(236, 72, 153, 0.25);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: 0.18s;
+    font-family: inherit;
+    position: relative;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+  .choice:hover, .choice:active {
+    border-color: var(--accent);
+    background: var(--choice-hover);
+    box-shadow: 0 0 12px rgba(244, 114, 182, 0.25);
+  }
+  .choice.selected {
+    border-color: #f472b6;
+    background: linear-gradient(135deg, #4a1f5c, #3b1f4d);
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.45), inset 0 0 12px rgba(236, 72, 153, 0.15);
+    color: #fff;
+  }
+  .choice.selected::after {
+    content: " ✓";
+    color: #f472b6;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .end {
+    text-align: center;
+    color: var(--muted);
+    padding: 12px 6px;
+    line-height: 1.7;
+    font-size: 0.85rem;
+  }
+  .end-title {
+    color: var(--accent);
+    font-size: 0.98rem;
+    margin-bottom: 8px;
+    text-shadow: 0 0 12px rgba(244, 114, 182, 0.4);
+  }
+  .progress {
+    height: 3px;
+    background: #3b1a4d;
+    border-radius: 2px;
+    margin-bottom: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ec4899, #a855f7);
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+  .scene-img {
+    width: 100%;
+    margin: 0 0 8px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(236, 72, 153, 0.28);
+    background: #0d0614;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 42vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scene-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 42vh;
+    object-fit: contain;
+    object-position: center;
+  }
+  .inline-qrs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 6px 0;
+    flex-shrink: 0;
+  }
+  .inline-qrs div { text-align: center; }
+  .inline-qrs img {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    border: 2px solid rgba(244, 114, 182, 0.5);
+    border-radius: 6px;
+    background: #fff;
+  }
+  .inline-qrs p {
+    color: var(--muted);
+    font-size: 0.65rem;
+    margin-bottom: 2px;
+  }
+  .disclaimer-box {
+    background: rgba(253, 164, 175, 0.08);
+    border: 1px solid rgba(253, 164, 175, 0.35);
+    border-radius: 10px;
+    padding: 10px 10px;
+    margin-bottom: 8px;
+    font-size: 0.84rem;
+    color: var(--muted);
+    line-height: 1.55;
+    flex-shrink: 0;
+  }
+  .disclaimer-box strong {
+    color: var(--warn);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+  }
+  .amount-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin: 6px 0;
+    flex-shrink: 0;
+  }
+  .amount-grid .choice {
+    text-align: center;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    padding: 8px 8px;
+  }
+  .amount-grid .choice.selected::after { display: none; }
+  .note {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 4px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .pay-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(10, 4, 18, 0.94);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 12px;
+  }
+  .pay-overlay.show { display: flex; }
+  .pay-card {
+    background: #1c0f2e;
+    border: 1px solid rgba(236, 72, 153, 0.45);
+    border-radius: 14px;
+    padding: 14px 12px 12px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 28px rgba(236, 72, 153, 0.3);
+  }
+  .pay-card h3 {
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .pay-card .tip {
+    color: var(--warn);
+    font-size: 0.82rem;
+    margin-bottom: 8px;
+  }
+  .pay-btn {
+    display: block;
+    width: 100%;
+    padding: 11px;
+    margin-top: 6px;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #be185d, #ec4899);
+    color: #fff;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .pay-btn:active { opacity: 0.85; }
+  .nav-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    flex: 1;
+    padding: 9px 8px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    background: #241430;
+    color: var(--muted);
+    transition: 0.18s;
+  }
+  .nav-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  #boot-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0a0412;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #boot-layer.hidden { display: none; }
+  .boot-loading { text-align: center; color: var(--muted); }
+  .boot-loading .spinner {
+    width: 42px; height: 42px;
+    border: 3px solid rgba(236, 72, 153, 0.25);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .boot-loading p { font-size: 0.9rem; letter-spacing: 1px; }
+  .boot-progress {
+    width: 200px; height: 4px;
+    background: #2a1538; border-radius: 2px;
+    margin: 14px auto 0; overflow: hidden;
+  }
+  .boot-progress-bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #ec4899, #a855f7);
+    transition: width 0.2s ease;
+  }
+  #intro-layer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: #000;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  #intro-layer.show { display: block; }
+  #intro-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    background: #000;
+  }
+  .intro-text {
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    padding: 0 24px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .intro-text span {
+    display: inline-block;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    line-height: 1.6;
+    text-shadow:
+      0 0 12px rgba(236, 72, 153, 0.9),
+      0 2px 8px rgba(0, 0, 0, 0.85),
+      0 0 24px rgba(168, 85, 247, 0.5);
+    animation: textPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes textPulse {
+    0%, 100% { opacity: 0.92; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+  }
+  .intro-hint {
+    display: block;
+    margin-top: 18px;
+    font-size: 0.78rem;
+    letter-spacing: 3px;
+    color: rgba(252, 231, 243, 0.7);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  #main-app {
+    display: none;
+    height: 100%;
+    height: 100dvh;
+  }
+  #main-app.show { display: block; }
+  #fx-layer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: auto;
+    overflow: hidden;
+  }
+  #fx-layer.show { display: block; }
+  .fx-black {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .fx-black .fx-msg {
+    color: #f9a8d4;
+    font-size: 1.35rem;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 0 24px;
+    line-height: 1.75;
+    animation: fadeInScale 0.55s ease;
+    text-shadow: 0 0 20px rgba(236, 72, 153, 0.7);
+    white-space: pre-line;
+  }
+  @keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .fx-rain {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #be185d 0%, #9d174d 40%, #701a75 100%);
+    overflow: hidden;
+  }
+  .fx-rain .rain-item {
+    position: absolute;
+    color: rgba(255,255,255,0.88);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    animation: rainFall linear forwards;
+    text-shadow: 0 0 8px rgba(0,0,0,0.35);
+    pointer-events: none;
+  }
+  @keyframes rainFall {
+    0% { transform: translateY(-40px) rotate(-8deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.9; }
+    100% { transform: translateY(110vh) rotate(6deg); opacity: 0; }
+  }
+  .fx-heartbeat {
+    position: absolute;
+    inset: 0;
+    background: rgba(12, 4, 20, 0.93);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fx-heartbeat .fx-msg {
+    color: #fda4af;
+    font-size: 1.28rem;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 1.75;
+    padding: 0 24px;
+    animation: heartbeat 0.7s ease-in-out infinite;
+    white-space: pre-line;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 24px rgba(253,164,175,0.85); }
+  }
+  .watch-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  .watch-layer .watch-item {
+    position: absolute;
+    color: rgba(244, 114, 182, 0.26);
+    font-size: 0.68rem;
+    white-space: nowrap;
+    animation: watchDrift 9s linear infinite;
+    user-select: none;
+  }
+  @keyframes watchDrift {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    15% { opacity: 0.5; }
+    85% { opacity: 0.35; }
+    100% { transform: translateY(-130px) translateX(18px); opacity: 0; }
+  }
+  .scene.intense {
+    border-color: rgba(244, 114, 182, 0.55);
+    box-shadow: 0 0 36px rgba(236, 72, 153, 0.4);
+  }
+  .choices-wrap {
+    flex-shrink: 0;
+    margin-top: auto;
+  }
+
+  .em {
+    color: #f472b6;
+    font-weight: 600;
+  }
+  .em-warn {
+    color: #fda4af;
+    font-weight: 700;
+  }
+
+
+  .video-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: rgba(10, 4, 18, 0.96);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 12px;
+  }
+  .video-overlay.show { display: flex; }
+  .video-card {
+    background: #1c0f2e;
+    border: 1px solid rgba(236, 72, 153, 0.45);
+    border-radius: 14px;
+    padding: 12px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 28px rgba(236, 72, 153, 0.3);
+  }
+  .video-card video {
+    width: 100%;
+    max-height: 45vh;
+    border-radius: 8px;
+    background: #000;
+    display: block;
+  }
+  .video-tip {
+    color: var(--warn);
+    font-size: 0.88rem;
+    margin: 10px 0 8px;
+    letter-spacing: 1px;
+  }
+  .work-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 11px 12px;
+    margin-bottom: 6px;
+    background: var(--choice);
+    border: 1px solid rgba(236, 72, 153, 0.35);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: 0.18s;
+  }
+  .work-link:hover, .work-link:active {
+    border-color: var(--accent);
+    background: var(--choice-hover);
+    box-shadow: 0 0 12px rgba(244, 114, 182, 0.25);
+  }
+</style>
+</head>
+<body>
+<div id="boot-layer">
+  <div class="boot-loading">
+    <div class="spinner"></div>
+    <p>训练家小妲正在进入……</p>
+    <div class="boot-progress"><div class="boot-progress-bar" id="bootBar"></div></div>
+  </div>
+</div>
+<div id="intro-layer">
+  <img id="intro-img" src="https://i.postimg.cc/Y967TNNw/IMG-20260921-212026.png" alt="封面">
+  <div class="intro-text">
+    <span>欢迎来到小妲的贡nu引导训练</span>
+    <span class="intro-hint">点击屏幕进入</span>
+  </div>
+</div>
+<div id="fx-layer"></div>
+<div id="main-app">
+<div class="container">
+<div class="progress"><div class="progress-bar" id="bar"></div></div>
+
+<div class="scene active" id="s1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg" alt="" loading="eager"></div>
+    <div class="disclaimer-box">
+      <strong>免责声明</strong>
+      本问卷为深度自愿<span class="em">臣服</span>调教。所有<span class="em">上贡</span>均为你真实渴望的<span class="em">臣服</span>行为。<br>
+      继续即代表你自愿把钱包、尊严与<span class="em-warn">射精权</span>彻底交给小妲哦❤️<br>
+      页面中<span class="em">收款码</span>仅为剧情互动设计。真实转账属个人自愿，请务必理性控制金额，切勿超出承受能力。若感到不适请立即停止。<br>
+      过程中遇到需要脱离问卷的指令，请认真执行完成再返回问卷🖤
+    </div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s2">我已彻底知悉并同意，渴望被小妲引导成傻逼贡奴</button>
+    <button class="choice" data-next="end_exit">退出问卷</button>
+    <div class="nav-row">
+      <button class="nav-btn" disabled>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s2" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/L8kz65tG/IMG-20260922-003132.jpg" alt="" loading="eager"></div>
+    <div class="narr">欢迎来到小妲的<span class="em">贡奴</span>引导训练，既然已经看见刚才的免责声明，知道自己待会会怎么样了叭？</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s3" data-fx="heartbeat:是一只上赶着送死的傻逼呢～">即使知道也想要尝试！😭</button>
+    <button class="choice" data-next="s3" data-fx="heartbeat:是一只上赶着送死的傻逼呢～">知道可以白给就忍不住了😭</button>
+    <button class="choice" data-next="s3" data-fx="heartbeat:是一只上赶着送死的傻逼呢～">很想被训练，不自觉点进来了😖</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s3" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/Mp0yKH7N/IMG-20260922-003140.jpg" alt="" loading="eager"></div>
+    <div class="narr">说到训练，只有小妲的<span class="em">贡奴</span>可以被训练哦，你愿意成为小妲的<span class="em">贡奴</span>吗？</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s4" data-fx="black:从现在开始你就是小妲的傻逼贡奴咯～">是的！我愿意成为小妲最忠诚的ATM，一切都愿意被小妲支配！❤️</button>
+    <button class="choice" data-next="end_exit">不愿意（退出）</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s4" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/vZ7WHTrp/IMG-20260922-003154.jpg" alt="" loading="eager"></div>
+    <div class="narr">很好，在训练开始之前，先让小妲了解你一下～</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s5">月入5k以下，手头闲钱不多</button>
+    <button class="choice" data-next="s5">月入5k–1.5w，有一点可动用的钱</button>
+    <button class="choice" data-next="s5">月入1.5w以上，有可观的存款。</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s5" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/P5bmrJbs/IMG-20260922-003208.jpg" alt="" loading="eager"></div>
+    <div class="narr">不管怎么样，似乎对于小妲来说都有可利用的价值呢～
+那么，把小妲的<span class="em">收款码</span><span class="em">保存好</span>叭——这是你唯一讨好我的方式哦。</div>
+    <div class="inline-qrs">
+      <div><p>微信</p><img src="https://i.postimg.cc/ht4YLyP8/IMG-20260721-005339.png" alt="微信"></div>
+      <div><p>支付宝</p><img src="https://i.postimg.cc/SNh3sQBR/IMG-20260721-005325.jpg" alt="支付宝"></div>
+    </div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s6" data-fx="black:要一直一直保存下去哦～">明白！</button>
+    <button class="choice" data-next="s6" data-fx="black:要一直一直保存下去哦～">不用小妲说，都已经保存好了</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s6" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/0NcDD4H6/IMG-20260922-003222.jpg" alt="" loading="eager"></div>
+    <div class="task">不过呢，要是没有一点点刺激的奖励，你应该进行不下去呢～
+拿出一只手紧紧握住那根无用的软棒，眼睛盯着小妲，慢慢地撸，另一只手拿着手机。
+
+慢慢地来～慢慢地动～</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-video-gate>忍不住想加快～😭</button>
+    <button class="choice" data-video-gate>很慢了🥵</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s7" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg" alt="" loading="eager"></div>
+    <div class="narr">已经忍不住了叭？现在暂停。感受一下释放的冲动。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s8">已经很危险了……随时会射</button>
+    <button class="choice" data-next="s8">快要忍不住了，求小妲继续控制我</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s8" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/L8kz65tG/IMG-20260922-003132.jpg" alt="" loading="eager"></div>
+    <div class="narr">果然是个废物呢～😂
+不能撸哦～这是小妲的命令！
+
+现在单手打开你的支付软件。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s9">是！！！已经打开了，随时准备把钱全部献给女神 😭</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s9" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/Mp0yKH7N/IMG-20260922-003140.jpg" alt="" loading="eager"></div>
+    <div class="narr">**立刻扫小妲的<span class="em">收款码</span>**。
+      马上要完成咯，这一步完成，就离成为真正的<span class="em">贡奴</span>不远咯😊</div>
+    <div class="inline-qrs">
+      <div><p>微信</p><img src="https://i.postimg.cc/ht4YLyP8/IMG-20260721-005339.png" alt="微信"></div>
+      <div><p>支付宝</p><img src="https://i.postimg.cc/SNh3sQBR/IMG-20260721-005325.jpg" alt="支付宝"></div>
+    </div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s10">已经扫完！</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s10" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/vZ7WHTrp/IMG-20260922-003154.jpg" alt="" loading="eager"></div>
+    <div class="narr">在金额页选择一个数字叭～</div>
+  </div>
+  <div class="choices-wrap">
+    <div class="amount-grid">
+      <button class="choice" data-amount="100" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">100元<br><small>顶级白给狗</small></button>
+      <button class="choice" data-amount="88.88" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">88.88元<br><small>高级贡奴</small></button>
+      <button class="choice" data-amount="48.88" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">48.88元</button>
+      <button class="choice" data-amount="38.88" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">38.88元</button>
+      <button class="choice" data-amount="18.88" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">18.88元</button>
+      <button class="choice" data-amount="10.88" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">10.88元</button>
+    </div>
+    <button class="choice" data-amount="other" data-next="s11" data-fx="heartbeat:选了大的嘛？如果没有的话，小妲可以再给你一次机会哦～">其他金额</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s11" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/P5bmrJbs/IMG-20260922-003208.jpg" alt="" loading="eager"></div>
+    <div class="narr">现在来写下一点点必需的东西，备注，严格按照下面的模板写哦～</div>
+    <div class="quote">「XXX自愿<span class="em">白给</span><span class="em">上贡</span>XX元给小妲女神。」</div>
+    <div class="narr">敢写真名的忠犬，小妲会额外关注的。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s12">我已经写好了！我是自愿的！</button>
+    <button class="choice" data-next="s12">啊啊啊啊！写的时候更兴奋了！</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s12" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/0NcDD4H6/IMG-20260922-003222.jpg" alt="" loading="eager"></div>
+    <div class="task">继续撸动可能已经软下去的肉棒，然后一位一位地输入支付密码，同时严格服从指令：
+第1位：慢慢撸，小妲正在看着你把钱送给小妲
+第2位：加速！就像是你的钱正在飞向小妲的钱包
+第3位：小妲马上就要收到傻逼的贡金咯～
+    
+不准撸了！停到第三位哦～</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s13">已经输完前三位，快忍不住了 😭</button>
+    <button class="choice" data-next="s13">难受！！！！</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s13" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg" alt="" loading="eager"></div>
+    <div class="narr">故意让你停下，就是想看你这个贱狗痛苦求饶又极度渴望的样子
+
+感受那种快要爆炸却射不出来的极致痛苦。
+小妲就喜欢看你这贱样～</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s14" data-fx="heartbeat:已经是会哀求着小妲的程度了叭？">好难受……求小妲继续</button>
+    <button class="choice" data-next="s14" data-fx="heartbeat:已经是会哀求着小妲的程度了叭？">我能忍住，请继续调教我</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="s14" data-watch="1">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/L8kz65tG/IMG-20260922-003132.jpg" alt="" loading="eager"></div>
+    <div class="narr">现在继续输入后三位密码，然后乖乖点确认，但不能撸哦～
+
+点下去的瞬间，把你的钱和<span class="em-warn">射精权</span>一起献给小妲。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s15" data-fx="rain">已经点下去了……钱走了</button>
+    <button class="choice" data-next="s15" data-fx="rain">手指还在抖，但已经确认了</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s15" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/Mp0yKH7N/IMG-20260922-003140.jpg" alt="" loading="eager"></div>
+    <div class="narr">真点下去了？呵呵，果然因为没有射精的影响变成听话的傻逼了❤️
+
+钱已经离开你的账户。现在停下来，好好感受那一刻：
+空虚、羞耻、兴奋、被使用的充实感……全部混在一起。
+
+老实告诉小妲，钱转出去的那一刻，爽嘛？</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s16">更硬了……一边羞耻一边兴奋</button>
+    <button class="choice" data-next="s16">有种被彻底使用的充实感</button>
+    <button class="choice" data-next="s16">还想再被榨一次</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s16" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/vZ7WHTrp/IMG-20260922-003154.jpg" alt="" loading="eager"></div>
+    <div class="narr">第一次只是开胃菜哦～
+
+先别急着动。把刚才钱离开账户的感觉再回味几秒。
+然后继续慢慢地撸。</div>
+    <div class="task">这次每撸十下，在心里默念一次：
+「我的钱本来就不属于我。」
+「我只配<span class="em">无脑吐钱</span>。」
+
+要配合着默念慢慢地撸哦。把现在的感觉刻进身体里。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s17" data-fx="black:你只配被提款～|你只配被戏耍～|你只配被宰杀～">已经默念完，快要疯了</button>
+    <button class="choice" data-next="s17" data-fx="black:你只配被提款～|你只配被戏耍～|你只配被宰杀～">越默念越兴奋……求继续</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s17" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/P5bmrJbs/IMG-20260922-003208.jpg" alt="" loading="eager"></div>
+    <div class="narr">现在，你已经成为了<span class="em">贡奴</span>了呢，但是<span class="em">贡奴</span>不会只<span class="em">上贡</span>一次哦～
+
+现在重新打开支付软件，可以撸快点咯，继续按照刚才的流程开始～
+但是这次不用再写长备注，也不用再走完整流程——小妲只看你愿不愿意再交一次。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s18">已经准备好了</button>
+    <button class="choice" data-next="s18">有点慌……但还是要继续</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s18" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/0NcDD4H6/IMG-20260922-003222.jpg" alt="" loading="eager"></div>
+    <div class="narr">这次金额自己定。
+记住：贡得越多，小妲越会记住你这个好用的<span class="em">ATM</span>。</div>
+  </div>
+  <div class="choices-wrap">
+    <div class="amount-grid">
+      <button class="choice" data-amount="200" data-next="s19" data-fx="heartbeat:已经想贡得多一点了叭">200元+</button>
+      <button class="choice" data-amount="100" data-next="s19" data-fx="heartbeat:已经想贡得多一点了叭">100元</button>
+      <button class="choice" data-amount="66.66" data-next="s19" data-fx="heartbeat:已经想贡得多一点了叭">66.66元</button>
+      <button class="choice" data-amount="50" data-next="s19" data-fx="heartbeat:已经想贡得多一点了叭">50元</button>
+    </div>
+    <button class="choice" data-amount="other2" data-next="s19" data-fx="heartbeat:已经想贡得多一点了叭">其他金额（请尽量多一点）</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s19" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg" alt="" loading="eager"></div>
+    <div class="narr">备注可以简单写：</div>
+    <div class="quote">「xxx是小妲的专属<span class="em">提款机</span>。」</div>
+    <div class="narr">然后一边加速，一边点下确认。
+好好感受钱离开账户的那一刻叭～</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s20" data-fx="black:已经能做到自主上贡了呢～">已经点了😭</button>
+    <button class="choice" data-next="s20" data-fx="black:已经能做到自主上贡了呢～">点完之后更想被继续使用了</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s20" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/L8kz65tG/IMG-20260922-003132.jpg" alt="" loading="eager"></div>
+    <div class="narr">停！还是不能射哦～现在回答小妲：
+
+你是不是已经开始接受，自己就是小妲可以随时提款的<span class="em">贡奴</span>呢？
+不需要感情，不需要解释，只需要被叫到的时候把钱转过去？</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s21">是。我彻底接受了</button>
+    <button class="choice" data-next="s21">非常是。我只想被这样使用</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s21" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/Mp0yKH7N/IMG-20260922-003140.jpg" alt="" loading="eager"></div>
+    <div class="task">小妲很满意呢，现在一只手握住自己短小、无用的生殖器，心里默念三遍：
+    
+「我只配<span class="em">无脑吐钱</span>。」
+    
+「我的工资、存款都可以被拿走。」
+    
+「我只是<span class="em">提款机</span>。」</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s22">已经坚持完……手指一直在抖</button>
+    <button class="choice" data-next="s22">快要疯了，求小妲让我继续</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s22" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/vZ7WHTrp/IMG-20260922-003154.jpg" alt="" loading="eager"></div>
+    <div class="narr">默念完了吗？还没有结束呢～
+
+还有最后一次，这次金额小妲建议选一个能让你肉疼的数字，越大越好哦～
+准备好备注、准备好密码、准备好被<span class="em-warn">彻底榨干</span>。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s23">我已经准备好了</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s23" data-watch="2">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/P5bmrJbs/IMG-20260922-003208.jpg" alt="" loading="eager"></div>
+    <div class="narr">加速撸叭～🖤
+马上咯～🖤最后一次～🖤
+这是现在最重要的一次。</div>
+  </div>
+  <div class="choices-wrap">
+    <div class="amount-grid">
+      <button class="choice" data-amount="300" data-next="s24">300元+</button>
+      <button class="choice" data-amount="200" data-next="s24">200元</button>
+      <button class="choice" data-amount="150" data-next="s24">150元</button>
+      <button class="choice" data-amount="100" data-next="s24">100元</button>
+    </div>
+    <button class="choice" data-amount="final" data-next="s24">其他（请选会让心跳加速的）</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s24" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/0NcDD4H6/IMG-20260922-003222.jpg" alt="" loading="eager"></div>
+    <div class="task">备注写：
+「请小妲收下xxx的贡金。」
+
+然后完整输入六位密码，并默念：
+第1位：「我的钱本来就不属于我。」
+第2位：「给她送钱是我现在最快乐的事。」
+第3位：「我只配<span class="em">无脑吐钱</span>。」
+第4位：「我的工资、存款、未来都可以被拿走。」
+第5位：「我只想被使用。」
+第6位：「我只是<span class="em">提款机</span>。」
+
+停在确认键上方。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s25">已经全部准备好，停在确认键上方</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s25" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg" alt="" loading="eager"></div>
+    <div class="narr">「三。」
+「二。」
+「一。」
+
+直接按下去。</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s26" data-fx="heartbeat:可以射咯～白痴～">按下去了……</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s26" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/L8kz65tG/IMG-20260922-003132.jpg" alt="" loading="eager"></div>
+    <div class="narr">真是没救了～</div>
+    <div class="quote">白痴！</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s27">呜呜呜</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s26b" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/Mp0yKH7N/IMG-20260922-003140.jpg" alt="" loading="eager"></div>
+    <div class="narr">恭喜哦～成功<span class="em">上贡</span>了三次～</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s26">🥳🥳🥳开心</button>
+    <button class="choice" data-next="s27">呜呜呜😭😭😭</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s27" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/vZ7WHTrp/IMG-20260922-003154.jpg" alt="" loading="eager"></div>
+    <div class="narr">无论你最终有没有按下去，有一件事已经发生了。
+
+大脑已经记住：兴奋、失去控制、送钱，已经连在一起了～
+
+现在告诉小妲你现在的真实感觉：</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s28">空虚又满足，已经上瘾了</button>
+    <button class="choice" data-next="s28">好羞耻……但还想再来一次</button>
+    <button class="choice" data-next="s28">下面还硬着，完全射不出来</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s28" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/P5bmrJbs/IMG-20260922-003208.jpg" alt="" loading="eager"></div>
+    <div class="narr">从今天起，你就是可以被小妲无理由、随时提款的奴隶。</div>
+    <div class="quote">随时随地被使用、指挥</div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s29">请随意使用我</button>
+    <button class="choice" data-next="s29">会认真存钱上贡的</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene intense" id="s29" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/0NcDD4H6/IMG-20260922-003222.jpg" alt="" loading="eager"></div>
+    <div class="end">
+      <div class="end-title">恭喜你完成了这次完整的臣服仪式～</div>
+      你现在是不是既空虚又满足？<br>
+      把支付截图和最真实的羞耻感受发给小妲吧。<br>
+      小妲可能会给你专属奖励。<br>
+      <strong style="color:var(--accent)">如果过程中没有上贡</strong><br>
+      可以在这里上供点小妲的辛苦费呢～。
+    </div>
+    <div class="inline-qrs">
+      <div><p>微信</p><img src="https://i.postimg.cc/ht4YLyP8/IMG-20260721-005339.png" alt="微信"></div>
+      <div><p>支付宝</p><img src="https://i.postimg.cc/SNh3sQBR/IMG-20260721-005325.jpg" alt="支付宝"></div>
+    </div>
+    <p class="note"></p>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" data-next="s30">好的！</button>
+    <button class="choice" onclick="location.reload()" style="text-align:center;">再来一次叭 😊</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="scene intense" id="s30" data-watch="3">
+  <div class="scene-body">
+    <div class="scene-img"><img src="https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg" alt="" loading="eager"></div>
+    <div class="end">
+      <div class="end-title">小妲的其它作品</div>
+      <p style="margin:10px 0 6px;color:var(--muted);font-size:0.8rem;">点击进入：</p>
+      <a class="work-link" href="https://ten-ten-dusky.vercel.app/" target="_blank" rel="noopener">十日贡奴小游戏1.0</a>
+      <a class="work-link" href="https://zul-ruby.vercel.app/" target="_blank" rel="noopener">小妲的上贡小游戏（动画版）</a>
+      <a class="work-link" href="https://baichi-black.vercel.app/" target="_blank" rel="noopener">小妲的白痴贡奴问卷1.0</a>
+      <a class="work-link" href="https://xd21.vercel.app/" target="_blank" rel="noopener">小妲的上贡小游戏2.1</a>
+    </div>
+  </div>
+  <div class="choices-wrap">
+    <button class="choice" onclick="location.reload()" style="text-align:center;">再来一次叭 😊</button>
+    <div class="nav-row">
+      <button class="nav-btn" data-nav-prev>返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene" id="end_exit">
+  <div class="end">
+    <div class="end-title">♡</div>
+    那就请离开吧。<br><br>
+    问卷结束了。
+  </div>
+</div>
+
+</div>
+</div>
+
+
+<audio id="bgm" src="https://files.catbox.moe/5plhe0.mp3" loop preload="auto"></audio>
+
+<div class="video-overlay" id="videoOverlay">
+  <div class="video-card">
+    <video id="edgeVideo" src="https://files.catbox.moe/ykfw5k.mp4" loop playsinline webkit-playsinline muted></video>
+    <p class="video-tip">如果接近射精，就按下去叭～</p>
+    <button type="button" class="pay-btn" id="btnEdgeDone">快要射了</button>
+  </div>
+</div>
+
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-card">
+    <h3>扫码上贡</h3>
+    <p class="tip" id="payTip">上贡越多越好哦～🖤</p>
+    <div class="inline-qrs" style="margin-bottom:8px;">
+      <div><p>支付宝</p><img src="https://i.postimg.cc/SNh3sQBR/IMG-20260721-005325.jpg" alt="支付宝"></div>
+      <div><p>微信</p><img src="https://i.postimg.cc/ht4YLyP8/IMG-20260721-005339.png" alt="微信"></div>
+    </div>
+    <button type="button" class="pay-btn" id="btnPaid">已上贡 / 继续</button>
+  </div>
+</div>
+
+<script>
+  const order = [
+    's1','s2','s3','s4','s5','s6','s7','s8','s9','s10',
+    's11','s12','s13','s14','s15','s16','s17','s18','s19','s20',
+    's21','s22','s23','s24','s25','s26','s26b','s27','s28','s29','s30','end_exit'
+  ];
+  const payGates = {};
+  let pendingGo = null;
+  let selectedAmount = null;
+  let historyStack = ['s1'];
+  const answers = [];
+  const WATCH_TEXTS = {
+    1: ['小妲在看着', '钱包不属于你', '忠犬', '继续', '发情', '上贡', 'ATM', '不准射'],
+    2: ['射精支配', '再贡一次', '提款机', '射精权已上交', '好用的狗', '小妲记得你', '无脑吐钱'],
+    3: ['最终仪式', '你只是提款机', '一切都可以被拿走', '小妲专属ATM', '永远上贡', '上贡是射精开关', '小妲一直看着', '按下去']
+  };
+
+  function recordAnswer(q, a) {
+    answers.push({ q, a, time: new Date().toLocaleString('zh-CN') });
+  }
+  function getCurrentChapter() {
+    const el = document.querySelector('.scene.active .chapter');
+    return el ? el.textContent.trim() : '未知';
+  }
+  function getCurrentId() {
+    const el = document.querySelector('.scene.active');
+    return el ? el.id : null;
+  }
+
+  function playFx(type, msg, duration) {
+    return new Promise((resolve) => {
+      const layer = document.getElementById('fx-layer');
+      if (!layer) { resolve(); return; }
+      layer.innerHTML = '';
+      layer.classList.add('show');
+      if (type === 'black') {
+        const div = document.createElement('div');
+        div.className = 'fx-black';
+        div.innerHTML = '<div class="fx-msg">' + (msg || '……') + '</div>';
+        layer.appendChild(div);
+        setTimeout(() => { layer.classList.remove('show'); layer.innerHTML = ''; resolve(); }, duration || 2400);
+      } else if (type === 'heartbeat') {
+        const div = document.createElement('div');
+        div.className = 'fx-heartbeat';
+        div.innerHTML = '<div class="fx-msg">' + (msg || '……') + '</div>';
+        layer.appendChild(div);
+        setTimeout(() => { layer.classList.remove('show'); layer.innerHTML = ''; resolve(); }, duration || 2800);
+      } else if (type === 'rain') {
+        const rain = document.createElement('div');
+        rain.className = 'fx-rain';
+        layer.appendChild(rain);
+        const words = ['上贡成功🖤','谁是ATM傻逼？','你','会吐钱咯','真好用','真乖','要憋死了叭','谁是白痴提款机','你喜欢被提款','白给一次'];
+        for (let i = 0; i < 52; i++) {
+          const item = document.createElement('div');
+          item.className = 'rain-item';
+          item.textContent = words[Math.floor(Math.random() * words.length)];
+          item.style.left = (Math.random() * 100) + '%';
+          item.style.top = (-Math.random() * 30) + 'px';
+          item.style.animationDuration = (2.2 + Math.random() * 2.8) + 's';
+          item.style.animationDelay = (Math.random() * 1.2) + 's';
+          item.style.fontSize = (0.7 + Math.random() * 0.45) + 'rem';
+          item.style.opacity = 0.55 + Math.random() * 0.4;
+          rain.appendChild(item);
+        }
+        setTimeout(() => { layer.classList.remove('show'); layer.innerHTML = ''; resolve(); }, duration || 4000);
+      } else {
+        layer.classList.remove('show');
+        resolve();
+      }
+    });
+  }
+
+  function clearWatch(scene) {
+    const old = scene.querySelector('.watch-layer');
+    if (old) old.remove();
+  }
+  function spawnWatch(scene, level) {
+    clearWatch(scene);
+    const layer = document.createElement('div');
+    layer.className = 'watch-layer';
+    const pool = WATCH_TEXTS[level] || WATCH_TEXTS[1];
+    const count = level === 1 ? 7 : (level === 2 ? 14 : 22);
+    for (let i = 0; i < count; i++) {
+      const item = document.createElement('span');
+      item.className = 'watch-item';
+      item.textContent = pool[Math.floor(Math.random() * pool.length)];
+      item.style.left = (Math.random() * 88) + '%';
+      item.style.top = (Math.random() * 90) + '%';
+      item.style.animationDelay = (Math.random() * 6) + 's';
+      item.style.animationDuration = (7 + Math.random() * 5) + 's';
+      item.style.fontSize = (0.65 + Math.random() * 0.25) + 'rem';
+      layer.appendChild(item);
+    }
+    scene.appendChild(layer);
+  }
+  function applySceneAtmosphere(id) {
+    const scene = document.getElementById(id);
+    if (!scene) return;
+    const watch = scene.getAttribute('data-watch');
+    if (watch) spawnWatch(scene, parseInt(watch, 10));
+    else clearWatch(scene);
+  }
+
+  function goDirect(id) {
+    document.querySelectorAll('.scene').forEach(el => el.classList.remove('active'));
+    const t = document.getElementById(id);
+    if (t) {
+      t.classList.add('active');
+      const idx = order.indexOf(id);
+      const pct = idx >= 0 ? Math.min(100, (idx / (order.length - 2)) * 100) : 100;
+      document.getElementById('bar').style.width = pct + '%';
+      applySceneAtmosphere(id);
+      const prevBtn = t.querySelector('[data-nav-prev]');
+      if (prevBtn) prevBtn.disabled = historyStack.length <= 1;
+    }
+  }
+
+  async function go(id) {
+    const cur = getCurrentId();
+    if (cur && cur !== id) {
+      if (historyStack[historyStack.length - 1] !== id) historyStack.push(id);
+    }
+    if (payGates[id]) {
+      pendingGo = id;
+      const tip = document.getElementById('payTip');
+      if (tip && selectedAmount != null) {
+        tip.textContent = (typeof selectedAmount === 'number' || !isNaN(parseFloat(selectedAmount)))
+          ? '当前选择：' + selectedAmount + '元，上贡越多越好哦～🖤'
+          : '上贡越多，小妲越会特别记住你～🖤';
+      }
+      const ov = document.getElementById('payOverlay');
+      if (ov) ov.classList.add('show');
+      return;
+    }
+    goDirect(id);
+  }
+
+  function goPrev() {
+    if (historyStack.length <= 1) return;
+    historyStack.pop();
+    goDirect(historyStack[historyStack.length - 1]);
+  }
+
+    function preloadAll() {
+    return new Promise((resolve) => {
+      const assets = [
+        'https://i.postimg.cc/GmnFCGyT/IMG-20260922-003123.jpg',
+        'https://i.postimg.cc/L8kz65tG/IMG-20260922-003132.jpg',
+        'https://i.postimg.cc/Mp0yKH7N/IMG-20260922-003140.jpg',
+        'https://i.postimg.cc/vZ7WHTrp/IMG-20260922-003154.jpg',
+        'https://i.postimg.cc/P5bmrJbs/IMG-20260922-003208.jpg',
+        'https://i.postimg.cc/0NcDD4H6/IMG-20260922-003222.jpg',
+        'https://i.postimg.cc/Y967TNNw/IMG-20260921-212026.png',
+        'https://i.postimg.cc/ht4YLyP8/IMG-20260721-005339.png',
+        'https://i.postimg.cc/SNh3sQBR/IMG-20260721-005325.jpg',
+        'https://files.catbox.moe/5plhe0.mp3',
+        'https://files.catbox.moe/ykfw5k.mp4'
+      ];
+      let loaded = 0;
+      const total = assets.length;
+      const bar = document.getElementById('bootBar');
+      function update() {
+        loaded++;
+        if (bar) bar.style.width = Math.round((loaded / total) * 100) + '%';
+        if (loaded >= total) resolve();
+      }
+      assets.forEach((src) => {
+        if (src.endsWith('.mp3')) {
+          const a = new Audio();
+          a.oncanplaythrough = update; a.onerror = update;
+          a.preload = 'auto'; a.src = src;
+        } else if (src.endsWith('.mp4')) {
+          const v = document.createElement('video');
+          v.preload = 'auto'; v.muted = true;
+          v.oncanplaythrough = update; v.onerror = update;
+          v.src = src; try { v.load(); } catch (e) {}
+        } else {
+          const img = new Image();
+          img.onload = update; img.onerror = update; img.src = src;
+        }
+      });
+      setTimeout(resolve, 20000);
+    });
+  }
+
+function showIntro() {
+    document.getElementById('boot-layer').classList.add('hidden');
+    document.getElementById('intro-layer').classList.add('show');
+  }
+
+  function enterQuestionnaire() {
+    const intro = document.getElementById('intro-layer');
+    intro.classList.remove('show');
+    intro.style.display = 'none';
+    document.getElementById('main-app').classList.add('show');
+    applySceneAtmosphere('s1');
+    try {
+      const bgm = document.getElementById('bgm');
+      if (bgm) { bgm.volume = 0.55; bgm.play().catch(function(){}); }
+    } catch (e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    preloadAll().then(showIntro);
+    const intro = document.getElementById('intro-layer');
+    intro.addEventListener('click', enterQuestionnaire);
+    intro.addEventListener('touchend', function (e) { e.preventDefault(); enterQuestionnaire(); }, { passive: false });
+
+    const btn = document.getElementById('btnPaid');
+    function done(e) {
+      if (e) e.preventDefault();
+      const ov = document.getElementById('payOverlay');
+      if (ov) ov.classList.remove('show');
+      const id = pendingGo; pendingGo = null;
+      if (id) goDirect(id);
+    }
+    if (btn) {
+      btn.addEventListener('click', done);
+      btn.addEventListener('touchend', function (e) { e.preventDefault(); done(e); }, { passive: false });
+    }
+
+    const edgeBtn = document.getElementById('btnEdgeDone');
+    if (edgeBtn) {
+      function closeVideo(e) {
+        if (e) e.preventDefault();
+        const ov = document.getElementById('videoOverlay');
+        const v = document.getElementById('edgeVideo');
+        if (ov) ov.classList.remove('show');
+        if (v) { try { v.pause(); v.currentTime = 0; } catch (err) {} }
+        go('s7');
+      }
+      edgeBtn.addEventListener('click', closeVideo);
+      edgeBtn.addEventListener('touchend', function (e) { e.preventDefault(); closeVideo(e); }, { passive: false });
+    }
+
+    document.querySelectorAll('.choice').forEach(btn => {
+      btn.addEventListener('click', async function (e) {
+        const oc = this.getAttribute('onclick') || '';
+        if (oc.includes('location.reload')) return;
+        if (this.hasAttribute('data-video-gate')) {
+          const sc = this.closest('.scene');
+          if (sc) {
+            sc.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+          }
+          if (!this.dataset.recorded) {
+            recordAnswer(getCurrentChapter(), this.textContent.trim().replace(/\s+/g, ' '));
+            this.dataset.recorded = '1';
+          }
+          const ov = document.getElementById('videoOverlay');
+          const v = document.getElementById('edgeVideo');
+          if (ov) ov.classList.add('show');
+          if (v) {
+            try {
+              v.muted = false;
+              v.loop = true;
+              v.currentTime = 0;
+              const p = v.play();
+              if (p && p.catch) p.catch(function(){ v.muted = true; v.play().catch(function(){}); });
+            } catch (err) {}
+          }
+          return;
+        }
+        const scene = this.closest('.scene');
+        if (scene) {
+          scene.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+          this.classList.add('selected');
+        }
+        if (this.hasAttribute('data-amount')) {
+          const v = this.getAttribute('data-amount');
+          selectedAmount = isNaN(parseFloat(v)) ? v : parseFloat(v);
+        }
+        if (!this.dataset.recorded) {
+          recordAnswer(getCurrentChapter(), this.textContent.trim().replace(/\s+/g, ' '));
+          this.dataset.recorded = '1';
+        }
+        const fx = this.getAttribute('data-fx');
+        if (fx) {
+          e.preventDefault();
+          e.stopPropagation();
+          const parts = fx.split(':');
+          await playFx(parts[0], (parts.slice(1).join(':') || '').replace(/\|/g, '\n'));
+        }
+        const next = this.getAttribute('data-next');
+        if (next) go(next);
+      }, true);
+    });
+
+    document.querySelectorAll('[data-nav-prev]').forEach(b => b.addEventListener('click', goPrev));
+  });
+</script>
+</body>
+</html>
